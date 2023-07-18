@@ -1,0 +1,10 @@
+bin/defaultt/VIEW/Principal.class
+bin/defaultt/VIEW/App.class
+bin/defaultt/DTO/UsuarioDTO.class
+bin/defaultt/DAO/UsuarioDAO.class
+bin/defaultt/DAO/ConexaoDAO.class
+bin/br/com/agenda/factory/ConnectionFactory.class
+bin/br/com/agenda/model/Agenda.class
+bin/defaultt/VIEW/Login.class
+.vscode/settings.json
+.vscode/jdt.ls-java-project.json
