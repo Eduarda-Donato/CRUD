@@ -22,7 +22,8 @@ public class Login extends JFrame implements ActionListener {
     private JTextField nomeTexto;
     private JLabel senhaLabel;
     private JTextField senhaTexto;
-    private JButton cadastroButton;
+    private JButton loginButton;
+    private JButton singUpButton;
 
     public Login() {
         setTitle("Cadastro de usuário");
@@ -37,14 +38,17 @@ public class Login extends JFrame implements ActionListener {
         nomeTexto = new JTextField(20);
         senhaLabel = new JLabel("Senha: ");
         senhaTexto = new JTextField(20);
-        cadastroButton = new JButton("Cadastrar");
-        cadastroButton.addActionListener(this);
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(this);
+        singUpButton = new JButton("Sing Up");
+        singUpButton.addActionListener(this);
 
         painel.add(nomeLabel);
         painel.add(nomeTexto);
         painel.add(senhaLabel);
         painel.add(senhaTexto);
-        painel.add(cadastroButton);
+        painel.add(loginButton);
+        painel.add(singUpButton);
 
         add(painel);
         setVisible(true);
@@ -52,7 +56,7 @@ public class Login extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == cadastroButton) {
+        if (e.getSource() == loginButton || e.getSource() == singUpButton) {
             try {
                 UsuarioDTO usuariodto = new UsuarioDTO();
                 usuariodto.setNome(nomeTexto.getText());
@@ -62,15 +66,19 @@ public class Login extends JFrame implements ActionListener {
                 UsuarioDAO usuariodao = new UsuarioDAO();
                 ResultSet rsusuariodao = usuariodao.autenticacaoUsuario(usuariodto); //resultado do banco é trabalhado com ResultSet
 
-                if(rsusuariodao.next()){ //se tiver prox é pq trouxe algum valor (next() -> pelo menos uma linha)
+                if(e.getSource() == loginButton && rsusuariodao.next()){ //se tiver prox é pq trouxe algum valor (next() -> pelo menos uma linha)
                     //chamar tela desejada
                     Principal janelaPrincipal = new Principal();
                     janelaPrincipal.setVisible(true);
 
                     dispose(); //fecha a tela de login
+                }else if(e.getSource() == singUpButton){
+                    usuariodao.cadastrarFuncionario(usuariodto);
+                    JOptionPane.showMessageDialog(null, "Usuário Cadastrado");
                 }else {
                     //mesagem de incorreto (não existe no banco)
                     JOptionPane.showMessageDialog(null, "Usuário ou Senha inválida");
+                    
                 }
 
             } catch (SQLException erro) {
