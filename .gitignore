@@ -8,3 +8,4 @@ bin/br/com/agenda/model/Agenda.class
 bin/defaultt/VIEW/Login.class
 .vscode/settings.json
 .vscode/jdt.ls-java-project.json
+lib/swing-layout-1.0.2.jar
