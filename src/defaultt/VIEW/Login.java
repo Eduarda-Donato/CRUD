@@ -33,13 +33,12 @@ public class Login extends JFrame implements ActionListener {
     private JTextField idTexto;
     private JButton loginButton;
     private JButton singUpButton;
-    private JButton pesquisaButton;
     private JTable tabela;
     private DefaultTableModel model;
     private JScrollPane scrollPane;
     private JButton carregarButton;
     private JButton alterarButton;
-    //private JButton deletarButton;
+    private JButton deletarButton;
 
     private UsuarioDTO usuariodto;
     private UsuarioDAO usuariodao;
@@ -64,10 +63,9 @@ public class Login extends JFrame implements ActionListener {
         idTexto = new JTextField();
         loginButton = new JButton("Login");
         singUpButton = new JButton("Sing Up");
-        pesquisaButton = new JButton("Search");
         carregarButton = new JButton("Load");
         alterarButton = new JButton("Update");
-        //deletarButton = new JButton("Delete")
+        deletarButton = new JButton("Delete");
 
         usuariodto = new UsuarioDTO();
         usuariodao = new UsuarioDAO();
@@ -75,9 +73,9 @@ public class Login extends JFrame implements ActionListener {
 
         loginButton.addActionListener(this);
         singUpButton.addActionListener(this);
-        pesquisaButton.addActionListener(this);
         carregarButton.addActionListener(this);
         alterarButton.addActionListener(this);
+        deletarButton.addActionListener(this);
 
         //tabela
         tabela = new JTable();
@@ -96,7 +94,6 @@ public class Login extends JFrame implements ActionListener {
         painel.add(senhaTexto);
         painel.add(loginButton);
         painel.add(singUpButton);
-        painel.add(pesquisaButton);
         painel.add(tabela);
         listarValores();
 
@@ -121,7 +118,7 @@ public class Login extends JFrame implements ActionListener {
         JPanel painelButtonSuperior = new JPanel(new FlowLayout());
         painelButtonSuperior.add(loginButton);
         painelButtonSuperior.add(singUpButton);
-        painelButtonSuperior.add(pesquisaButton);
+
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -133,6 +130,7 @@ public class Login extends JFrame implements ActionListener {
         JPanel painelButtonInferior = new JPanel(new FlowLayout());
         painelButtonInferior.add(carregarButton);
         painelButtonInferior.add(alterarButton);
+        painelButtonInferior.add(deletarButton);
 
         gbc.gridy = 4; 
         painel.add(painelButtonInferior, gbc);
@@ -166,13 +164,6 @@ public class Login extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Cadastrar " + erro.getMessage());
             }
         }
-        else if(e.getSource() == pesquisaButton){
-            try {
-                listarValores();
-            } catch (Exception erro) {
-                JOptionPane.showMessageDialog(null, "Listar Valores Tabela " + erro.getMessage());
-            }
-        }
         else if(e.getSource() == carregarButton){
             try {
                 carregarCampos();
@@ -186,6 +177,14 @@ public class Login extends JFrame implements ActionListener {
                 listarValores();
             } catch (Exception erro) {
                 JOptionPane.showMessageDialog(null, "Alterar Valores " + erro.getMessage());
+            }
+        }
+        else if(e.getSource() == deletarButton){
+            try {
+                excluirValores();
+                listarValores();
+            } catch (Exception erro) {
+                JOptionPane.showMessageDialog(null, "Excluir Valores " + erro.getMessage());
             }
         }
     }
@@ -250,18 +249,27 @@ public class Login extends JFrame implements ActionListener {
     }
 
     private void alterarValores(){
-        //UsuarioDTO usuariodto = new UsuarioDTO();
         usuariodto.setId(Integer.parseInt(idTexto.getText()));
         usuariodto.setNome(nomeTexto.getText());
         usuariodto.setSenha(senhaTexto.getText());
 
-        UsuarioDAO usuariodao = new UsuarioDAO();
         if("".equals(nomeTexto.getText()) || "".equals(senhaTexto.getText())){
             JOptionPane.showMessageDialog(null, "ERRO. CARREGUE OS CAMPOS");
         }else{
             usuariodao.alterarUsuario(usuariodto);
             JOptionPane.showMessageDialog(null, "Usuário Atualizado");
         }
-        
+    }
+
+    private void excluirValores(){
+        usuariodto.setId(Integer.parseInt(idTexto.getText()));
+
+        if("".equals(nomeTexto.getText()) || "".equals(senhaTexto.getText())){
+            JOptionPane.showMessageDialog(null, "ERRO. CARREGUE OS CAMPOS");
+        }else{
+            usuariodao.excluirUsuario(usuariodto);
+            JOptionPane.showMessageDialog(null, "Usuário Deletado");
+        }
+
     }
 }

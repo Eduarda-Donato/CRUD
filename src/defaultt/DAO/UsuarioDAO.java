@@ -99,4 +99,19 @@ public class UsuarioDAO {
            JOptionPane.showMessageDialog(null, "UsuarioDAO Alterar "+ erro.getMessage());
         }
     }
+
+    public void excluirUsuario(UsuarioDTO usuariodto){
+        String sql = "delete from usuario where id = ?";
+        conexao = new ConexaoDAO().conectaBD();
+
+        try {
+            pstm = conexao.prepareStatement(sql);
+            pstm.setInt(1, usuariodto.getId());
+            pstm.execute();
+            pstm.close();
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioDAO Excluir "+ erro.getMessage());
+        }
+    }
+    
 }
