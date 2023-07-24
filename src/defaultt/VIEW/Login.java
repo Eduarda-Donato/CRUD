@@ -30,6 +30,7 @@ public class Login extends JFrame implements ActionListener {
     private JTextField nomeTexto;
     private JLabel senhaLabel;
     private JTextField senhaTexto;
+    private JTextField idTexto;
     private JButton loginButton;
     private JButton singUpButton;
     private JButton pesquisaButton;
@@ -37,7 +38,7 @@ public class Login extends JFrame implements ActionListener {
     private DefaultTableModel model;
     private JScrollPane scrollPane;
     private JButton carregarButton;
-    //private JButton alterarButton;
+    private JButton alterarButton;
     //private JButton deletarButton;
 
     private UsuarioDTO usuariodto;
@@ -60,11 +61,12 @@ public class Login extends JFrame implements ActionListener {
         nomeTexto = new JTextField(35);
         senhaLabel = new JLabel("Senha: ");
         senhaTexto = new JTextField(35);
+        idTexto = new JTextField();
         loginButton = new JButton("Login");
         singUpButton = new JButton("Sing Up");
         pesquisaButton = new JButton("Search");
         carregarButton = new JButton("Load");
-        //alterarButton = new JButton("Update");
+        alterarButton = new JButton("Update");
         //deletarButton = new JButton("Delete")
 
         usuariodto = new UsuarioDTO();
@@ -75,6 +77,7 @@ public class Login extends JFrame implements ActionListener {
         singUpButton.addActionListener(this);
         pesquisaButton.addActionListener(this);
         carregarButton.addActionListener(this);
+        alterarButton.addActionListener(this);
 
         //tabela
         tabela = new JTable();
@@ -129,6 +132,7 @@ public class Login extends JFrame implements ActionListener {
 
         JPanel painelButtonInferior = new JPanel(new FlowLayout());
         painelButtonInferior.add(carregarButton);
+        painelButtonInferior.add(alterarButton);
 
         gbc.gridy = 4; 
         painel.add(painelButtonInferior, gbc);
@@ -176,6 +180,14 @@ public class Login extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Carregar Campo" + erro.getMessage());
             }
         }
+        else if(e.getSource() == alterarButton){
+            try {
+                alterarValores();
+                listarValores();
+            } catch (Exception erro) {
+                JOptionPane.showMessageDialog(null, "Alterar Valores " + erro.getMessage());
+            }
+        }
     }
 
     private void logar() throws SQLException{
@@ -202,7 +214,7 @@ public class Login extends JFrame implements ActionListener {
         usuariodto.setSenha(senhaTexto.getText());
 
         if("".equals(nomeTexto.getText()) || "".equals(senhaTexto.getText())){
-        JOptionPane.showMessageDialog(null, "ERRO. PREENCHA OS CAMPOS");
+            JOptionPane.showMessageDialog(null, "ERRO. PREENCHA OS CAMPOS");
         }else{
             usuariodao.cadastrarUsuario(usuariodto);
             JOptionPane.showMessageDialog(null, "Usuário Cadastrado");
@@ -213,27 +225,43 @@ public class Login extends JFrame implements ActionListener {
 
 
     private void listarValores(){
-        ArrayList<UsuarioDTO> lista = usuariodao.pesquisarUsuario();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        ArrayList<UsuarioDTO> lista = usuarioDAO.pesquisarUsuario();
         model.setRowCount(0);
-        //model.setNumRows(0);
-        //tabela.clearSelection();
         for (UsuarioDTO usuario : lista) {
             Object[] rowData = {usuario.getId(), usuario.getNome(), usuario.getSenha()};
             model.addRow(rowData);
         }
-        model.setRowCount(0);
     }
     
     private void carregarCampos(){
         int linhaSetada = tabela.getSelectedRow();
 
+        idTexto.setText(tabela.getModel().getValueAt(linhaSetada, 0).toString());
         nomeTexto.setText(tabela.getModel().getValueAt(linhaSetada, 1).toString());
         senhaTexto.setText(tabela.getModel().getValueAt(linhaSetada, 2).toString());
+        
     }
 
     private void limparCampos(){
         nomeTexto.setText("");
         senhaTexto.setText("");
         nomeTexto.requestFocus();
+    }
+
+    private void alterarValores(){
+        //UsuarioDTO usuariodto = new UsuarioDTO();
+        usuariodto.setId(Integer.parseInt(idTexto.getText()));
+        usuariodto.setNome(nomeTexto.getText());
+        usuariodto.setSenha(senhaTexto.getText());
+
+        UsuarioDAO usuariodao = new UsuarioDAO();
+        if("".equals(nomeTexto.getText()) || "".equals(senhaTexto.getText())){
+            JOptionPane.showMessageDialog(null, "ERRO. CARREGUE OS CAMPOS");
+        }else{
+            usuariodao.alterarUsuario(usuariodto);
+            JOptionPane.showMessageDialog(null, "Usuário Atualizado");
+        }
+        
     }
 }

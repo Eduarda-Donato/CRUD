@@ -37,13 +37,15 @@ public class UsuarioDAO {
     }
 
     public void cadastrarUsuario(UsuarioDTO usuariodto){
-        String sql = "insert into usuario (nome, senha) values (?,?)";
+        String sql = "insert into usuario (id, nome, senha) values (?,?,?)";
 
         conexao = new ConexaoDAO().conectaBD();
         try {
             pstm = conexao.prepareStatement(sql);
-            pstm.setString(1, usuariodto.getNome()); 
-            pstm.setString(2, usuariodto.getSenha());
+            pstm.setInt(1, usuariodto.getId());
+            pstm.setString(2, usuariodto.getNome()); 
+            pstm.setString(3, usuariodto.getSenha());
+            
 
             pstm.execute();
             pstm.close();
@@ -77,5 +79,24 @@ public class UsuarioDAO {
             return null;
         }
         return lista;
+    }
+
+    public void alterarUsuario(UsuarioDTO usuariodto){
+        String sql = "update usuario set nome = ?, senha = ? where id = ?";
+        conexao = new ConexaoDAO().conectaBD();
+
+        try {
+            pstm = conexao.prepareStatement(sql);
+            pstm.setInt(3, usuariodto.getId());
+            pstm.setString(1, usuariodto.getNome());
+            pstm.setString(2, usuariodto.getSenha());
+            
+
+            pstm.execute();
+            pstm.close();
+
+        } catch (SQLException erro) {
+           JOptionPane.showMessageDialog(null, "UsuarioDAO Alterar "+ erro.getMessage());
+        }
     }
 }
